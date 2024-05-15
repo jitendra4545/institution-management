@@ -17,6 +17,9 @@ const OrganizationSchema = mongoose.Schema({
       phone: { type: String, required: true },
     adhaarPic: { type: String, required: true }, // Assuming URL to the image
       signature: { type: String, required: true } // Assuming URL to the image
+  },{
+    versionKey:false,
+    timestamps:true
   });
 
 

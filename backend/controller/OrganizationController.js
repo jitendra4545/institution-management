@@ -66,6 +66,58 @@ const RegisterOrganization = async (req, res) => {
 }
 
 
+
+const getAllOrganization=async(req,res)=>{
+            
+    try {
+        let allOrg=await OrganizationModel.find()
+        res.status(200).send(allOrg);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+
+
+const getSingleOrganization=async(req,res)=>{
+           let id=req.params.id
+           console.log(id) 
+    try {
+        let allOrg=await OrganizationModel.find({_id:id})
+        res.status(200).send(allOrg);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+
+const updateOrganization=async(req,res)=>{
+    let id=req.params.id
+    let data=req.body
+    console.log(id,data) 
+
+    try {
+        let allOrg=await OrganizationModel.findOneAndUpdate({_id:id},data)
+       res.send(allOrg)
+        // res.status(200).send({msg:"Organization updated successfully"});
+    } catch (error) {
+        res.status(500).send(error.message);  
+    }
+}
+
+
+const deleteOrganization=async(req,res)=>{
+    let id=req.params.id
+    try {
+        let allOrg=await OrganizationModel.findByIdAndDelete({_id:id})
+        res.status(200).send({msg:"Organization deleted successfully"});
+    } catch (error) {
+        res.status(500).send(error.message);  
+    }
+}
+
 module.exports = {
-    RegisterOrganization
+    RegisterOrganization,
+    getAllOrganization,
+    getSingleOrganization,
+    deleteOrganization,
+    updateOrganization
 }
