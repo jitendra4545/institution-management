@@ -1,5 +1,5 @@
 const express=require('express')
-const { RegisterOrganization, getAllOrganization, getSingleOrganization, updateOrganization, deleteOrganization } = require('../controller/OrganizationController')
+const { RegisterOrganization, getAllOrganization, getSingleOrganization, updateOrganization, deleteOrganization, resetPassword } = require('../controller/OrganizationController')
 const upload = require('../middleware/multer.middleware')
 const OrganizationRouter=express.Router()
 
@@ -18,6 +18,7 @@ OrganizationRouter.get("/",getAllOrganization)
 OrganizationRouter.get("/:id",getSingleOrganization)
 OrganizationRouter.patch("/:id",updateOrganization)
 OrganizationRouter.delete("/:id",deleteOrganization)
+OrganizationRouter.patch("/reset_password/:token",resetPassword)
 module.exports={
     OrganizationRouter
 }
