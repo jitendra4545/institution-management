@@ -20,7 +20,8 @@ const OrganizationSchema = mongoose.Schema({
   signature: { type: String, required: true },
   referalBonus: { type: Number, default: 0 },
   resetToken:{type:String,required:true},
-  password:{type:String} // Assuming URL to the image
+  password:{type:String},
+  isLogin:{type:Boolean,default:false} // Assuming URL to the image
 }, {
   versionKey: false,
   timestamps: true

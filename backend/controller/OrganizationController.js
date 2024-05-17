@@ -4,7 +4,7 @@ const nodemailer = require('nodemailer')
 const twilio = require('twilio');
 const jwt = require(`jsonwebtoken`)
 require('dotenv').config()
-
+const bcrypt=require('bcrypt')
 
 
 
@@ -28,7 +28,7 @@ const RegisterOrganization = async (req, res) => {
         let newOrg = new OrganizationModel({ ...data, adhaarPic: adhaarPicUrl?.url, signature: signatureUrl?.url, resetToken: token })
         await newOrg.save()
 
-        const resetPasswordLink = `enter your frontend url here for password reset`
+        const resetPasswordLink = `http://localhost:8444/organizations/reset_password/${token}`
 
         const transporter = nodemailer.createTransport({
 
@@ -79,14 +79,21 @@ const RegisterOrganization = async (req, res) => {
 const resetPassword = async (req, res) => {
     let token = req.params.token
     let { password } = req.body
-    console.log(token, password)
+    
     try {
         let decodeToken = jwt.verify(token, process.env.JWT_SECRET)
-        console.log(decodeToken)
+       
         let data = await OrganizationModel.find({ email: decodeToken.email, resetToken: token })
-        console.log(data)
+        // console.log(data)
         if (data.length > 0) {
-            await OrganizationModel.findOneAndUpdate({ email: data[0]?.email }, { password: password, resetToken: null })
+            bcrypt.hash(password, 8, async function(err, hash) {
+                if(hash){
+                    await OrganizationModel.findOneAndUpdate({ email: data[0]?.email }, { password: hash, resetToken: null })
+                }else{
+                    res.send({"msg":"unable to hash password"})
+                }
+            });
+          
         }
         res.status(200).send({ "msg": "Password reset successfully" });
     } catch (error) {
@@ -150,7 +157,32 @@ const deleteOrganization = async (req, res) => {
 
 
 
+const loginOrganization=async(req,res)=>{
+    const {email,password}=req.body
+    console.log(email,password)
+    try {
+      let data=await OrganizationModel.find({email:email})
+     console.log(data)
+    if(data.length>0){
+        bcrypt.compare(password, data[0].password,async function(err, result) {
+            if(result){
+                const token = jwt.sign({InstituteId:data[0]._id}, process.env.JWT_SECRET, { expiresIn:"1d" });
+             let updateStatus=await OrganizationModel.findByIdAndUpdate({_id:data[0]._id},{isLogin:true}) 
 
+             res.send({msg:"User login successful",token:token})
+            }
+         });
+    }else{
+        res.send({msg:"Unable to find the user! Please register first"})
+    }
+      
+    //   let data=await OrganizationModel.find({email:email})
+    //  console.log(data)
+       
+    } catch (error) {
+        res.status(500).send(error);
+    }
+}
 
 
 
@@ -169,5 +201,6 @@ module.exports = {
     getSingleOrganization,
     deleteOrganization,
     updateOrganization,
-    resetPassword
+    resetPassword,
+    loginOrganization
 }

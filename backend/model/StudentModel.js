@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 
 
 const StudentSchema = mongoose.Schema({
+    InstituteId: { type: String, required: true },
     IsActive: { type: Boolean, default: true },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
@@ -20,7 +21,7 @@ const StudentSchema = mongoose.Schema({
     qualification: String,
     certificate: String,
     adhaar: String,
-    profilePhoto: String, // Assuming this will be a URL to the photo stored elsewhere
+    profilePhoto: String, 
     phone: String,
     emergencyContact: String,
     batches: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Batch' }],
