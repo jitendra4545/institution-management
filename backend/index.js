@@ -4,17 +4,19 @@ const express = require(`express`)
 const { connection } = require('./config/db')
 const { OrganizationRouter } = require('./routes/OrganizationRoute')
 const { StudentRouter } = require('./routes/StudentRoute')
+const { CourseRouter } = require('./routes/CourseRoute')
 const app = express()
 app.use(cors())
 
 app.use(express.json())
 
 app.get("/",(req,res)=>{
-    res.send("Hi welcome to institute managemant app")
+    res.send("Hi welcome to institute management app")
 })
 
 app.use("/organizations",OrganizationRouter)
 app.use("/student",StudentRouter)
+app.use("/course",CourseRouter)
 
 app.listen(process.env.PORT, async () => {
     // console.log("hi")
