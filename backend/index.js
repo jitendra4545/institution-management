@@ -9,6 +9,9 @@ app.use(cors())
 
 app.use(express.json())
 
+app.use("/",(req,res)=>{
+    res.send("Hi welcome to institute managemant app")
+})
 
 app.use("/organizations",OrganizationRouter)
 app.use("/student",StudentRouter)
